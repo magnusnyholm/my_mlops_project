@@ -12,7 +12,7 @@ if __name__ == '__main__':
     image_tensors = []
     target_tensors = []
 
-    # Step 1: Loop through the raw data folder and separate tensors
+    # Loop through the raw data folder and separate tensors
     for filename in os.listdir(raw_data_folder):
         filepath = os.path.join(raw_data_folder, filename)
         

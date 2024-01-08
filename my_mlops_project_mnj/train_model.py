@@ -1,9 +1,9 @@
 import click
 import torch
 from torch import nn
-from model import myawesomemodel
-
-from data import mnist
+import os
+from models.model import myawesomemodel
+from data.dataset import mnist
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
@@ -43,7 +43,9 @@ def train(lr, batch_size, num_epochs):
             optimizer.step()
         print(f"Epoch {epoch} Loss {loss}")
 
-    torch.save(model, "model.pt")
+    # Save the model in the models folder
+    model_path = os.path.join("models", "model.pt")
+    torch.save(model.state_dict(), model_path)
 
 
 @click.command()
