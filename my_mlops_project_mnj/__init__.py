@@ -1,0 +1,2 @@
+from my_mlops_project_mnj.models.model import MyNeuralNet
+from my_mlops_project_mnj.predict_model import predict
