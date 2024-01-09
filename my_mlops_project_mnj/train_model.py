@@ -1,6 +1,7 @@
 import click
 import os
 import torch
+import matplotlib.pyplot as plt
 from torch import nn
 from models.model import myawesomemodel
 from data.dataset import mnist
@@ -30,6 +31,7 @@ def train(lr, batch_size, num_epochs):
 
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
     loss_fn = nn.CrossEntropyLoss()
+    loss_values = [] #used for accuracy plot
 
     for epoch in range(num_epochs):
         for batch in train_dataloader:
@@ -42,11 +44,25 @@ def train(lr, batch_size, num_epochs):
             loss.backward()
             optimizer.step()
         print(f"Epoch {epoch} Loss {loss}")
+        loss_values.append(loss.item())
     
     save_directory = "../models/"
     saving_path = os.path.join(save_directory, "model.pt")
     torch.save(model, saving_path)
     print("Model is saved")
+
+    #Training figure
+    # Plot the training curve
+    plt.figure()
+    plt.plot(loss_values, label='Training Loss')
+    plt.xlabel('Epoch')
+    plt.ylabel('Loss')
+    plt.title('Training Curve')
+    plt.legend()
+    plt.grid(True)
+    # Save the plot
+    save_path = '../reports/figures/training_loss_curve.png'
+    plt.savefig(save_path)
 
 @click.command()
 @click.argument("model_checkpoint")
