@@ -1,6 +1,11 @@
 # my_mlops_project_mnj
 
-Jus[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[D[3~[3~[3~[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cng out new MLOps tools
+This is my first MLOps project, basically just me trying out different MLOps tools. 
+
+The scripts should be run in the following order:
+1. make_dataset.py
+2. train_model.py train <"optional arguments">
+3. predict_model.py evaluate <"insert pre-trained model">
 
 ## Project structure
 
