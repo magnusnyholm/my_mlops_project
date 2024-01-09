@@ -1,11 +1,11 @@
 import click
+import os
 import torch
 from torch import nn
-import os
 from models.model import myawesomemodel
 from data.dataset import mnist
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 @click.group()
 def cli():
@@ -42,11 +42,11 @@ def train(lr, batch_size, num_epochs):
             loss.backward()
             optimizer.step()
         print(f"Epoch {epoch} Loss {loss}")
-
-    # Save the model in the models folder
-    model_path = os.path.join("models", "model.pt")
-    torch.save(model.state_dict(), model_path)
-
+    
+    save_directory = "../models/"
+    saving_path = os.path.join(save_directory, "model.pt")
+    torch.save(model, saving_path)
+    print("Model is saved")
 
 @click.command()
 @click.argument("model_checkpoint")
