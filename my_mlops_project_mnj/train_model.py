@@ -13,7 +13,6 @@ def cli():
     """Command line interface."""
     pass
 
-
 @click.command()
 @click.option("--lr", default=1e-3, help="learning rate to use for training")
 @click.option("--batch_size", default=256, help="batch size to use for training")
@@ -64,41 +63,7 @@ def train(lr, batch_size, num_epochs):
     save_path = '../reports/figures/training_loss_curve.png'
     plt.savefig(save_path)
 
-@click.command()
-@click.argument("model_checkpoint")
-def evaluate(model_checkpoint):
-    """Evaluate a trained model."""
-    print("Evaluating like my life dependends on it")
-    print(model_checkpoint)
-
-    # TODO: Implement evaluation logic here
-    model = torch.load(model_checkpoint)
-    _, test_set = mnist()
-    test_dataloader = torch.utils.data.DataLoader(
-        test_set, batch_size=64, shuffle=False
-    )
-    model.eval()
-
-    test_preds = [ ]
-    test_labels = [ ]
-    with torch.no_grad():
-        for batch in test_dataloader:
-            x, y = batch
-            x = x.to(device)
-            y = y.to(device)
-            y_pred = model(x)
-            test_preds.append(y_pred.argmax(dim=1).cpu())
-            test_labels.append(y.cpu())
-
-    test_preds = torch.cat(test_preds, dim=0)
-    test_labels = torch.cat(test_labels, dim=0)
-
-    print((test_preds == test_labels).float().mean())
-
-
 cli.add_command(train)
-cli.add_command(evaluate)
-
 
 if __name__ == "__main__":
     cli()
