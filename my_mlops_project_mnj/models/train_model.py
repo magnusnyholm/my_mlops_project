@@ -6,6 +6,9 @@ import hydra
 import matplotlib.pyplot as plt
 from torch import nn
 from pathlib import Path
+import logging
+log = logging.getLogger(__name__)
+
 
 # Add the parent directory to the system path
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -23,7 +26,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 @hydra.main(config_path="../../config/", config_name="train_config.yaml", version_base="1.3.2")
 def main(cfg):
     # Print hyperparameters for verification
-    print(f"Batch size: {cfg.hyperparameters.batch_size}, "
+    log.info(f"Batch size: {cfg.hyperparameters.batch_size}, "
           f"Epochs: {cfg.hyperparameters.epochs}, "
           f"Learning rate: {cfg.hyperparameters.learning_rate}")
 
@@ -34,8 +37,8 @@ def main(cfg):
 
 def train(learning_rate, batch_size, epochs):
     """Train a model on MNIST."""
-    print("Training day and night")
-    print(f"Learning Rate: {learning_rate}, Batch Size: {batch_size}, Epochs: {epochs}")
+    log.info("Training day and night")
+    log.info(f"Learning Rate: {learning_rate}, Batch Size: {batch_size}, Epochs: {epochs}")
 
     # TODO: Implement training loop here
     model = myawesomemodel.to(device)
@@ -56,7 +59,7 @@ def train(learning_rate, batch_size, epochs):
             loss = loss_fn(y_pred, y)
             loss.backward()
             optimizer.step()
-        print(f"Epoch {epoch} Loss {loss}")
+        log.info(f"Epoch {epoch} Loss {loss}")
         loss_values.append(loss.item())
     
     # Saving model
@@ -64,7 +67,7 @@ def train(learning_rate, batch_size, epochs):
     save_directory.mkdir(exist_ok=True)
     saving_path = save_directory / "trained_model.pt"
     torch.save(model, saving_path)
-    print(f"Model was saved to {saving_path}")
+    log.info(f"Model was saved to {saving_path}")
 
     #Training figure
     #Plot the training curve
@@ -81,7 +84,7 @@ def train(learning_rate, batch_size, epochs):
     save_path.mkdir(exist_ok=True)
     s_path = save_path / 'training_loss_curve.png'
     plt.savefig(s_path)
-    print(f"Plot of training curve was saved to {s_path}")
+    log.info(f"Plot of training curve was saved to {s_path}")
 
 if __name__ == "__main__":
     main()
