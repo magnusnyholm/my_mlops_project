@@ -27,7 +27,7 @@ def evaluate(model_filename):
     print(model_checkpoint)
 
     # Rest of the code remains the same
-    model = torch.load(model_checkpoint)
+    model = torch.load(model_checkpoint, map_location=device)
     _, test_set = mnist()
     test_dataloader = torch.utils.data.DataLoader(
         test_set, batch_size=64, shuffle=False
