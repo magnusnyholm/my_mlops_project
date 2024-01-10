@@ -2,6 +2,7 @@ import click
 import os
 import sys
 import torch
+import hydra
 import matplotlib.pyplot as plt
 from torch import nn
 from pathlib import Path
@@ -19,31 +20,33 @@ from data.dataset import mnist
 os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-@click.group()
-def cli():
-    """Command line interface."""
-    pass
+@hydra.main(config_path="../../config/", config_name="train_config.yaml", version_base="1.3.2")
+def main(cfg):
+    # Print hyperparameters for verification
+    print(f"Batch size: {cfg.hyperparameters.batch_size}, "
+          f"Epochs: {cfg.hyperparameters.epochs}, "
+          f"Learning rate: {cfg.hyperparameters.learning_rate}")
 
-@click.command()
-@click.option("--lr", default=1e-3, help="learning rate to use for training")
-@click.option("--batch_size", default=256, help="batch size to use for training")
-@click.option("--num_epochs", default=5, help="number of epochs to train for")
-def train(lr, batch_size, num_epochs):
+    # Call the train function with parameters from cfg
+    train(cfg.hyperparameters.learning_rate, 
+          cfg.hyperparameters.batch_size, 
+          cfg.hyperparameters.epochs)
+
+def train(learning_rate, batch_size, epochs):
     """Train a model on MNIST."""
     print("Training day and night")
-    print(lr)
-    print(batch_size)
+    print(f"Learning Rate: {learning_rate}, Batch Size: {batch_size}, Epochs: {epochs}")
 
     # TODO: Implement training loop here
     model = myawesomemodel.to(device)
     train_set, _ = mnist()
     train_dataloader = torch.utils.data.DataLoader(train_set, batch_size=batch_size)
 
-    optimizer = torch.optim.Adam(model.parameters(), lr=lr)
+    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
     loss_fn = nn.CrossEntropyLoss()
     loss_values = [] #used for accuracy plot
 
-    for epoch in range(num_epochs):
+    for epoch in range(epochs):
         for batch in train_dataloader:
             optimizer.zero_grad()
             x, y = batch
@@ -80,7 +83,5 @@ def train(lr, batch_size, num_epochs):
     plt.savefig(s_path)
     print(f"Plot of training curve was saved to {s_path}")
 
-cli.add_command(train)
-
 if __name__ == "__main__":
-    cli()
+    main()
