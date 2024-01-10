@@ -1,12 +1,20 @@
 import click
 import os
+import sys
 import torch
 import matplotlib.pyplot as plt
 from torch import nn
+from pathlib import Path
+
+# Add the parent directory to the system path
+script_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(script_dir)
+project_root_dir = Path(os.path.dirname(os.path.dirname(script_dir)))  # Navigate two levels up
+sys.path.append(parent_dir)
+
+# Import model and dataset
 from models.model import myawesomemodel
 from data.dataset import mnist
-from pathlib import Path
-import os
 
 os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -48,11 +56,12 @@ def train(lr, batch_size, num_epochs):
         print(f"Epoch {epoch} Loss {loss}")
         loss_values.append(loss.item())
     
-    save_directory = Path('../models/')
+    # Saving model
+    save_directory = project_root_dir / 'models'
     save_directory.mkdir(exist_ok=True)
     saving_path = save_directory / "trained_model.pt"
     torch.save(model, saving_path)
-    print("Model.pt was saved to the directory ../models/")
+    print(f"Model was saved to {saving_path}")
 
     #Training figure
     #Plot the training curve
@@ -63,12 +72,13 @@ def train(lr, batch_size, num_epochs):
     plt.title('Training Curve')
     plt.legend()
     plt.grid(True)
+
     # Save the plot
-    save_path = Path('../reports/figures/')
+    save_path = project_root_dir / 'reports' / 'figures'
     save_path.mkdir(exist_ok=True)
     s_path = save_path / 'training_loss_curve.png'
     plt.savefig(s_path)
-    print("Plot of training curve was saved to the directory ../reports/figures")
+    print(f"Plot of training curve was saved to {s_path}")
 
 cli.add_command(train)
 
