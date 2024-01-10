@@ -13,7 +13,7 @@ COPY models/ models/
 COPY data/ data/
 
 WORKDIR /
-RUN --mount=type=cache,target=~/pip/.cache pip install -r requirements.txt --no-cache-dir 
+RUN pip install -r requirements.txt --no-cache-dir 
 RUN pip install . --no-deps --no-cache-dir 
 
 # Entry point for prediction

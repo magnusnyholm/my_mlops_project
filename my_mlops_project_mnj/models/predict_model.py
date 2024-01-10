@@ -1,8 +1,17 @@
+import sys
+import os
+# Add the parent directory to PYTHONPATH
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import click
 import torch
 from data.dataset import mnist
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+# Current script directory
+current_script_dir = os.path.dirname(os.path.abspath(__file__))
+# Path to the 'models' directory
+models_dir = os.path.abspath(os.path.join(current_script_dir, '..', '..', 'models'))
 
 @click.group()
 def cli():
@@ -14,9 +23,7 @@ def cli():
 def evaluate(model_filename):
     """Evaluate a trained model."""
     print("Evaluating like my life depends on it")
-
-    # Modify here to use ../models/ folder
-    model_checkpoint = f'../models/{model_filename}'
+    model_checkpoint = os.path.join(models_dir, model_filename)
     print(model_checkpoint)
 
     # Rest of the code remains the same
