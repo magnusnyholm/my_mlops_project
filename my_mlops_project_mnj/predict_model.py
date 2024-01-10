@@ -41,7 +41,7 @@ def evaluate(model_filename):
     test_preds = torch.cat(test_preds, dim=0)
     test_labels = torch.cat(test_labels, dim=0)
 
-    print(f'Predicted accuracy: {round((test_preds == test_labels).float().mean().item(),2)}')
+    print(f'Evaluation accuracy: {round((test_preds == test_labels).float().mean().item(),2)}')
 
 cli.add_command(evaluate)
 

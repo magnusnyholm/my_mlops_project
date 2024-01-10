@@ -5,7 +5,10 @@ import matplotlib.pyplot as plt
 from torch import nn
 from models.model import myawesomemodel
 from data.dataset import mnist
+from pathlib import Path
+import os
 
+os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 @click.group()
@@ -16,7 +19,7 @@ def cli():
 @click.command()
 @click.option("--lr", default=1e-3, help="learning rate to use for training")
 @click.option("--batch_size", default=256, help="batch size to use for training")
-@click.option("--num_epochs", default=20, help="number of epochs to train for")
+@click.option("--num_epochs", default=5, help="number of epochs to train for")
 def train(lr, batch_size, num_epochs):
     """Train a model on MNIST."""
     print("Training day and night")
@@ -45,13 +48,14 @@ def train(lr, batch_size, num_epochs):
         print(f"Epoch {epoch} Loss {loss}")
         loss_values.append(loss.item())
     
-    save_directory = "../models/"
-    saving_path = os.path.join(save_directory, "model.pt")
+    save_directory = Path('../models/')
+    save_directory.mkdir(exist_ok=True)
+    saving_path = save_directory / "trained_model.pt"
     torch.save(model, saving_path)
-    print("Model is saved")
+    print("Model.pt was saved to the directory ../models/")
 
     #Training figure
-    # Plot the training curve
+    #Plot the training curve
     plt.figure()
     plt.plot(loss_values, label='Training Loss')
     plt.xlabel('Epoch')
@@ -60,8 +64,11 @@ def train(lr, batch_size, num_epochs):
     plt.legend()
     plt.grid(True)
     # Save the plot
-    save_path = '../reports/figures/training_loss_curve.png'
-    plt.savefig(save_path)
+    save_path = Path('../reports/figures/')
+    save_path.mkdir(exist_ok=True)
+    s_path = save_path / 'training_loss_curve.png'
+    plt.savefig(s_path)
+    print("Plot of training curve was saved to the directory ../reports/figures")
 
 cli.add_command(train)
 
